@@ -1,0 +1,12 @@
+{
+  "servers" : {
+  "1614170060388" : {
+      "id" : "1614170060388",
+      "name" : "localhost",
+      "host" : "127.0.0.1",
+      "port" : 3306,
+      "user" : "root",
+      "password" : "root"
+    }
+  }
+}
