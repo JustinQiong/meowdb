@@ -73,7 +73,8 @@ public class JdbcTemplate {
                 Map<String, String> row = new LinkedHashMap<>();
                 for (int i = 0; i < count; i++) {
                     String colName = meta.getColumnLabel(i + 1);
-                    row.put(colName.toLowerCase(), rs.getString(colName));
+                    String val =  rs.wasNull() ? "NULL" : rs.getString(colName);
+                    row.put(colName.toLowerCase(), val);
                 }
                 dataTable.addRow(row);
             }
