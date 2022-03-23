@@ -8,6 +8,7 @@
 2. 主机新增，删除，编辑
 3. 多tab窗口查询
 5. 多数据库批量执行ddl
+6. 通过主键的数据编辑
 
 界面预览
 ![image](https://user-images.githubusercontent.com/5967393/143399941-0dcba2f5-69da-4478-b9a4-645c2ce4eeac.png)
