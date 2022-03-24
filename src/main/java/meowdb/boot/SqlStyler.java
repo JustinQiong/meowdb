@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * @since 2021/3/1 14:19
  */
 public class SqlStyler<PS, SEG, S> implements Consumer<ListModification<? extends Paragraph<PS, SEG, S>>> {
-    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", Keywords.all()) + ")\\b";
+    private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", Bootstrap.keywords()) + ")\\b";
     private static final String PAREN_PATTERN = "\\(|\\)";
     private static final String BRACE_PATTERN = "\\{|\\}";
     private static final String BRACKET_PATTERN = "\\[|\\]";
