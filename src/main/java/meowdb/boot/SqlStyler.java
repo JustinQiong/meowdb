@@ -1,7 +1,6 @@
 package meowdb.boot;
 
 import javafx.application.Platform;
-import meowdb.common.Keywords;
 import org.fxmisc.richtext.GenericStyledArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpans;
