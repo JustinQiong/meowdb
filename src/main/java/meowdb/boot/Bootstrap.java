@@ -9,41 +9,14 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTreeCell;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.control.cell.TextFieldTreeCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -56,7 +29,6 @@ import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
-import meowdb.common.Keywords;
 import meowdb.config.Configs;
 import meowdb.dao.JdbcRepository;
 import meowdb.entity.config.Server;
@@ -64,30 +36,14 @@ import meowdb.entity.config.ServerConfig;
 import meowdb.entity.jdbc.ColumnInfo;
 import meowdb.entity.jdbc.DataTable;
 import meowdb.entity.jdbc.PrimaryKey;
-import meowdb.entity.node.DbNode;
-import meowdb.entity.node.NodeBase;
-import meowdb.entity.node.ServerNode;
-import meowdb.entity.node.TabData;
-import meowdb.entity.node.TableNode;
-import meowdb.util.CollectionUtils;
-import meowdb.util.Images;
-import meowdb.util.ResizeUtils;
-import meowdb.util.StringUtils;
-import meowdb.util.TableUtils;
+import meowdb.entity.node.*;
+import meowdb.util.*;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -101,7 +57,7 @@ import java.util.concurrent.Executors;
 public class Bootstrap {
 
     private final Stage mainStage;
-    private final Set<String> keywordCache = new CopyOnWriteArraySet<>();
+    private static final Set<String> keywords = new CopyOnWriteArraySet<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
     private final Map<String, MysqlDataSource> dataSourceCache = new HashMap<>();
 //    private final Map<String, ServerCache> serverCache = new HashMap<>();
@@ -512,7 +468,11 @@ public class Bootstrap {
     }
 
     private void loadKeyword() {
-        Arrays.stream(Keywords.values()).forEach(v -> addKeyWords(v.getWord()));
+        try {
+            FileLoader.load("keywords.txt").forEach(this::addKeyWords);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadConfig() throws IOException {
@@ -540,8 +500,8 @@ public class Bootstrap {
 
     private void addKeyWords(String... keywords) {
         for (String keyword : keywords) {
-            keywordCache.add(keyword.toLowerCase());
-            keywordCache.add(keyword.toUpperCase());
+            Bootstrap.keywords.add(keyword.toLowerCase());
+            Bootstrap.keywords.add(keyword.toUpperCase());
         }
     }
 
@@ -1106,7 +1066,7 @@ public class Bootstrap {
                     return;
                 }
                 List<String> filteredList = new ArrayList<>();
-                for (String word : keywordCache) {
+                for (String word : keywords) {
                     if (word.startsWith(substring)) {
                         filteredList.add(word);
                     }
@@ -1197,5 +1157,9 @@ public class Bootstrap {
         codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
         ResizeUtils.enableVerticalResize(codeArea);
         return codeArea;
+    }
+
+    public static Set<String> keywords() {
+        return keywords;
     }
 }
